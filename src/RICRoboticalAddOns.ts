@@ -11,7 +11,7 @@
 
 import { RICAddOnBase, RICAddOnRegistry, RICDataExtractor, RICDataExtractorVarType, RICLog, RICReportMsg, ROSSerialAddOnStatus } from "@robotical/ricjs";
 
-export class RICRoboticalAddOns {
+export default class RICRoboticalAddOns {
   static registerAddOns(addOnRegistry: RICAddOnRegistry): void {
     const addOns = {
       '00000083': { "class": RICAddOnDistanceSensor, "typeName": "DistanceSensor" },
