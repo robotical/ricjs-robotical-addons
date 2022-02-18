@@ -1,4 +1,8 @@
 module.exports = {
+  testPathIgnorePatterns : [
+    "/node_modules/",
+    "/dist/"
+  ],
   roots: ['<rootDir>'],
   testMatch: [
     "**/__tests__/**/*.+(ts|tsx|js)",

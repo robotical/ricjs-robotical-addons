@@ -9,10 +9,10 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { RICAddOnBase, RICAddOnManager, RICDataExtractor, RICDataExtractorVarType, RICLog, RICReportMsg, ROSSerialAddOnStatus } from "@robotical/ricjs";
+import { RICAddOnBase, RICAddOnRegistry, RICDataExtractor, RICDataExtractorVarType, RICLog, RICReportMsg, ROSSerialAddOnStatus } from "@robotical/ricjs";
 
 export class RICRoboticalAddOns {
-  static registerAddOns(addOnManager: RICAddOnManager): void {
+  static registerAddOns(addOnRegistry: RICAddOnRegistry): void {
     const addOns = {
       '00000083': { "class": RICAddOnDistanceSensor, "typeName": "DistanceSensor" },
       '00000084': { "class": RICAddOnLightSensor,    "typeName": "LightSensor" },
@@ -27,7 +27,7 @@ export class RICRoboticalAddOns {
       '0000008D': { "class": RICAddOnLEDArm,         "typeName": "DiscoArm" },
     };
     for (const [key, value] of Object.entries(addOns)) {
-      addOnManager.registerHWElemType(key, 
+        addOnRegistry.registerHWElemType(key, 
               value.typeName, 
               "RSAddOn", 
               (typeCode: string, name: string, addOnFamily: string) => {
