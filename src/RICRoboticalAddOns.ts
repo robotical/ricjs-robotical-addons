@@ -28,12 +28,12 @@ export default class RICRoboticalAddOns {
     };
     for (const [key, value] of Object.entries(addOns)) {
         addOnRegistry.registerHWElemType(key, 
-              value.typeName, 
-              "RSAddOn", 
-              (typeCode: string, name: string, addOnFamily: string) => {
-                const deviceTypeCode = parseInt(typeCode, 16);
-                return new value.class(name, deviceTypeCode, addOnFamily) 
-              } 
+            value.typeName, 
+            "RSAddOn", 
+            (typeCode: string, name: string, addOnFamily: string) => {
+              const deviceTypeCode = parseInt(typeCode, 16);
+              return new value.class(name, deviceTypeCode, addOnFamily) 
+            } 
       );
     }
   }
