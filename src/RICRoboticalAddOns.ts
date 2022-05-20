@@ -11,20 +11,31 @@
 
 import { RICAddOnBase, RICAddOnRegistry, RICDataExtractor, RICDataExtractorVarType, RICLog, RICReportMsg, ROSSerialAddOnStatus } from "@robotical/ricjs";
 
+// RIC ADDON CODES
+export const RIC_WHOAMI_TYPE_CODE_ADDON_DISTANCE = "VCNL4200";
+export const RIC_WHOAMI_TYPE_CODE_ADDON_LIGHT = "lightsensor";
+export const RIC_WHOAMI_TYPE_CODE_ADDON_COLOUR = "coloursensor";
+export const RIC_WHOAMI_TYPE_CODE_ADDON_IRFOOT = "IRFoot";
+export const RIC_WHOAMI_TYPE_CODE_ADDON_LEDFOOT = "LEDfoot";
+export const RIC_WHOAMI_TYPE_CODE_ADDON_LEDARM = "LEDarm";
+export const RIC_WHOAMI_TYPE_CODE_ADDON_LEDEYE = "LEDeye";
+export const RIC_WHOAMI_TYPE_CODE_ADDON_NOISE = "noisesensor";
+export const RIC_WHOAMI_TYPE_CODE_ADDON_GRIPSERVO = "roboservo3";
+
 export default class RICRoboticalAddOns {
   static registerAddOns(addOnRegistry: RICAddOnRegistry): void {
     const addOns = {
-      '00000083': { "class": RICAddOnDistanceSensor, "typeName": "DistanceSensor", "whoAmI": "VCNL4200"},
-      '00000084': { "class": RICAddOnLightSensor,    "typeName": "LightSensor", "whoAmI": "lightsensor" },
-      '00000085': { "class": RICAddOnColourSensor,   "typeName": "ColourSensor", "whoAmI": "coloursensor" },
-      '00000086': { "class": RICAddOnIRFoot,         "typeName": "IRFoot", "whoAmI": "IRFoot" },
-      '00000087': { "class": RICAddOnLEDFoot,        "typeName": "DiscoFoot", "whoAmI": "LEDfoot" },
-      '00000088': { "class": RICAddOnLEDArm,         "typeName": "DiscoArm", "whoAmI": "LEDarm" },
-      '00000089': { "class": RICAddOnLEDEye,         "typeName": "DiscoEyes", "whoAmI":  "LEDeye" },
-      '0000008A': { "class": RICAddOnNoiseSensor,    "typeName": "NoiseSensor", "whoAmI": "noisesensor" },
-      '0000008B': { "class": RICAddOnGripServo,      "typeName": "Gripper", "whoAmI": "roboservo3" },
-      '0000008C': { "class": RICAddOnIRFoot,         "typeName": "IRFoot", "whoAmI": "IRFoot" },
-      '0000008D': { "class": RICAddOnLEDArm,         "typeName": "DiscoArm", "whoAmI": "LEDarm" },
+      '00000083': { "class": RICAddOnDistanceSensor, "typeName": "DistanceSensor", "whoAmI": RIC_WHOAMI_TYPE_CODE_ADDON_DISTANCE},
+      '00000084': { "class": RICAddOnLightSensor,    "typeName": "LightSensor", "whoAmI": RIC_WHOAMI_TYPE_CODE_ADDON_LIGHT },
+      '00000085': { "class": RICAddOnColourSensor,   "typeName": "ColourSensor", "whoAmI": RIC_WHOAMI_TYPE_CODE_ADDON_COLOUR },
+      '00000086': { "class": RICAddOnIRFoot,         "typeName": "IRFoot", "whoAmI": RIC_WHOAMI_TYPE_CODE_ADDON_IRFOOT },
+      '00000087': { "class": RICAddOnLEDFoot,        "typeName": "DiscoFoot", "whoAmI": RIC_WHOAMI_TYPE_CODE_ADDON_LEDFOOT },
+      '00000088': { "class": RICAddOnLEDArm,         "typeName": "DiscoArm", "whoAmI": RIC_WHOAMI_TYPE_CODE_ADDON_LEDARM },
+      '00000089': { "class": RICAddOnLEDEye,         "typeName": "DiscoEyes", "whoAmI":  RIC_WHOAMI_TYPE_CODE_ADDON_LEDEYE },
+      '0000008A': { "class": RICAddOnNoiseSensor,    "typeName": "NoiseSensor", "whoAmI": RIC_WHOAMI_TYPE_CODE_ADDON_NOISE },
+      '0000008B': { "class": RICAddOnGripServo,      "typeName": "Gripper", "whoAmI": RIC_WHOAMI_TYPE_CODE_ADDON_GRIPSERVO },
+      '0000008C': { "class": RICAddOnIRFoot,         "typeName": "IRFoot", "whoAmI": RIC_WHOAMI_TYPE_CODE_ADDON_IRFOOT },
+      '0000008D': { "class": RICAddOnLEDArm,         "typeName": "DiscoArm", "whoAmI": RIC_WHOAMI_TYPE_CODE_ADDON_LEDARM },
     };
     for (const [key, value] of Object.entries(addOns)) {
         addOnRegistry.registerHWElemType(key, 
