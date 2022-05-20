@@ -395,7 +395,7 @@ class RICAddOnColourSensor extends RICAddOnBase {
       const cal = this.getCalibration();
 
       for (let i = 0; i < 4; i++) {
-        const calRcv = parseInt(dataReceived.hexRd.substring(4 * i, 4), 16);
+        const calRcv = parseInt(dataReceived.hexRd.substr(4 * i, 4), 16);
         if (calRcv > 0) { cal[i] = 255 / calRcv; }
       }
 
