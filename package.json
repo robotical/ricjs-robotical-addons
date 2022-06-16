@@ -1,6 +1,6 @@
 {
     "name": "@robotical/ricjs-robotical-addons",
-    "version": "1.0.11",
+    "version": "1.0.12",
     "description": "JS/TS library for Robotical RIC Addons",
     "author": "Rob Dobson <rob@dobson.com>",
     "repository": {
