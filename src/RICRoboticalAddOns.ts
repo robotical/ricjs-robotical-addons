@@ -25,26 +25,23 @@ export const RIC_WHOAMI_TYPE_CODE_ADDON_GRIPSERVO = "roboservo3";
 export default class RICRoboticalAddOns {
   static registerAddOns(addOnRegistry: RICAddOnRegistry): void {
     const addOns = {
-      '00000083': { "class": RICAddOnDistanceSensor, "typeName": "DistanceSensor", "whoAmI": RIC_WHOAMI_TYPE_CODE_ADDON_DISTANCE},
-      '00000084': { "class": RICAddOnLightSensor,    "typeName": "LightSensor", "whoAmI": RIC_WHOAMI_TYPE_CODE_ADDON_LIGHT },
-      '00000085': { "class": RICAddOnColourSensor,   "typeName": "ColourSensor", "whoAmI": RIC_WHOAMI_TYPE_CODE_ADDON_COLOUR },
-      '00000086': { "class": RICAddOnIRFoot,         "typeName": "IRFoot", "whoAmI": RIC_WHOAMI_TYPE_CODE_ADDON_IRFOOT },
-      '00000087': { "class": RICAddOnLEDFoot,        "typeName": "DiscoFoot", "whoAmI": RIC_WHOAMI_TYPE_CODE_ADDON_LEDFOOT },
-      '00000088': { "class": RICAddOnLEDArm,         "typeName": "DiscoArm", "whoAmI": RIC_WHOAMI_TYPE_CODE_ADDON_LEDARM },
-      '00000089': { "class": RICAddOnLEDEye,         "typeName": "DiscoEyes", "whoAmI":  RIC_WHOAMI_TYPE_CODE_ADDON_LEDEYE },
-      '0000008A': { "class": RICAddOnNoiseSensor,    "typeName": "NoiseSensor", "whoAmI": RIC_WHOAMI_TYPE_CODE_ADDON_NOISE },
-      '0000008B': { "class": RICAddOnGripServo,      "typeName": "Gripper", "whoAmI": RIC_WHOAMI_TYPE_CODE_ADDON_GRIPSERVO },
-      '0000008C': { "class": RICAddOnIRFoot,         "typeName": "IRFoot", "whoAmI": RIC_WHOAMI_TYPE_CODE_ADDON_IRFOOT },
-      '0000008D': { "class": RICAddOnLEDArm,         "typeName": "DiscoArm", "whoAmI": RIC_WHOAMI_TYPE_CODE_ADDON_LEDARM },
+      [RIC_WHOAMI_TYPE_CODE_ADDON_DISTANCE]: { "class": RICAddOnDistanceSensor, "typeName": "DistanceSensor"},
+      [RIC_WHOAMI_TYPE_CODE_ADDON_LIGHT]: { "class": RICAddOnLightSensor,    "typeName": "LightSensor" },
+      [RIC_WHOAMI_TYPE_CODE_ADDON_COLOUR]: { "class": RICAddOnColourSensor,   "typeName": "ColourSensor" },
+      [RIC_WHOAMI_TYPE_CODE_ADDON_IRFOOT]: { "class": RICAddOnIRFoot,         "typeName": "IRFoot" },
+      [RIC_WHOAMI_TYPE_CODE_ADDON_LEDFOOT]: { "class": RICAddOnLEDFoot,        "typeName": "DiscoFoot" },
+      [RIC_WHOAMI_TYPE_CODE_ADDON_LEDARM]: { "class": RICAddOnLEDArm,         "typeName": "DiscoArm" },
+      [RIC_WHOAMI_TYPE_CODE_ADDON_LEDEYE]: { "class": RICAddOnLEDEye,         "typeName": "DiscoEyes" },
+      [RIC_WHOAMI_TYPE_CODE_ADDON_NOISE]: { "class": RICAddOnNoiseSensor,    "typeName": "NoiseSensor" },
+      [RIC_WHOAMI_TYPE_CODE_ADDON_GRIPSERVO]: { "class": RICAddOnGripServo,      "typeName": "Gripper" },
     };
     for (const [key, value] of Object.entries(addOns)) {
-        addOnRegistry.registerHWElemType(key, 
+        addOnRegistry.registerHWElemType( 
             value.typeName, 
             "RSAddOn", 
-            value.whoAmI,
-            (typeCode: string, name: string, addOnFamily: string, whoAmI: string) => {
-              const deviceTypeCode = parseInt(typeCode, 16);
-              return new value.class(name, deviceTypeCode, addOnFamily, whoAmI) 
+            key,
+            (name: string, addOnFamily: string, whoAmI: string) => {
+              return new value.class(name, addOnFamily, whoAmI) 
             } 
       );
     }
@@ -211,8 +208,8 @@ const ADDON_NOISESENSOR_FORMAT_DEF = {
 /*eslint no-empty-function: ["error", { "allow": ["methods"] }]*/
 /* eslint-disable @typescript-eslint/no-empty-function */
 class RICAddOnGripServo extends RICAddOnBase {
-  constructor(name: string, deviceTypeID: number, typeName: string, whoAmI: string) {
-    super(name, deviceTypeID, typeName, whoAmI);
+  constructor(name: string, typeName: string, whoAmI: string) {
+    super(name, typeName, whoAmI);
   }
 
   processPublishedData(
@@ -226,7 +223,6 @@ class RICAddOnGripServo extends RICAddOnBase {
 
     // Extract data
     retStatus.id = addOnID;
-    retStatus.deviceTypeID = this._deviceTypeID;
     retStatus.name = this._name;
     retStatus.whoAmI = this._whoAmI;
     retStatus.status = statusByte;
@@ -237,8 +233,8 @@ class RICAddOnGripServo extends RICAddOnBase {
 }
 
 class RICAddOnLEDFoot extends RICAddOnBase {
-  constructor(name: string, deviceTypeID: number, typeName: string, whoAmI: string) {
-    super(name, deviceTypeID, typeName, whoAmI);
+  constructor(name: string, typeName: string, whoAmI: string) {
+    super(name, typeName, whoAmI);
   }
   processPublishedData(
     addOnID: number,
@@ -251,7 +247,6 @@ class RICAddOnLEDFoot extends RICAddOnBase {
 
     // Extract data
     retStatus.id = addOnID;
-    retStatus.deviceTypeID = this._deviceTypeID;
     retStatus.name = this._name;
     retStatus.whoAmI = this._whoAmI;
     retStatus.status = statusByte;
@@ -262,9 +257,8 @@ class RICAddOnLEDFoot extends RICAddOnBase {
 }
 
 class RICAddOnLEDArm extends RICAddOnBase {
-  constructor(name: string, deviceTypeID: number, typeName: string, whoAmI: string) {
-    super(name, deviceTypeID, typeName, whoAmI);
-    this._deviceTypeID = deviceTypeID;
+  constructor(name: string, typeName: string, whoAmI: string) {
+    super(name, typeName, whoAmI);
   }
   processPublishedData(
     addOnID: number,
@@ -275,7 +269,6 @@ class RICAddOnLEDArm extends RICAddOnBase {
 
     // Extract data
     retStatus.id = addOnID;
-    retStatus.deviceTypeID = this._deviceTypeID;
     retStatus.name = this._name;
     retStatus.whoAmI = this._whoAmI;
     retStatus.status = statusByte;
@@ -286,8 +279,8 @@ class RICAddOnLEDArm extends RICAddOnBase {
 }
 
 class RICAddOnLEDEye extends RICAddOnBase {
-  constructor(name: string, deviceTypeID: number, typeName: string, whoAmI: string) {
-    super(name, deviceTypeID, typeName, whoAmI);
+  constructor(name: string, typeName: string, whoAmI: string) {
+    super(name, typeName, whoAmI);
   }
   processPublishedData(
     addOnID: number,
@@ -298,7 +291,6 @@ class RICAddOnLEDEye extends RICAddOnBase {
 
     // Extract data
     retStatus.id = addOnID;
-    retStatus.deviceTypeID = this._deviceTypeID;
     retStatus.name = this._name;
     retStatus.whoAmI = this._whoAmI;
     retStatus.status = statusByte;
@@ -310,9 +302,8 @@ class RICAddOnLEDEye extends RICAddOnBase {
 
 class RICAddOnIRFoot extends RICAddOnBase {
   _dataExtractor: RICDataExtractor;
-  constructor(name: string, deviceTypeID: number, typeName: string, whoAmI: string) {
-    super(name, deviceTypeID, typeName, whoAmI);
-    this._deviceTypeID = deviceTypeID;
+  constructor(name: string, typeName: string, whoAmI: string) {
+    super(name, typeName, whoAmI);
     this._dataExtractor = new RICDataExtractor(name, ADDON_IRFOOT_FORMAT_DEF);
   }
   processPublishedData(
@@ -325,7 +316,6 @@ class RICAddOnIRFoot extends RICAddOnBase {
 
     // Extract data
     retStatus.id = addOnID;
-    retStatus.deviceTypeID = this._deviceTypeID;
     retStatus.name = this._name;
     retStatus.whoAmI = this._whoAmI;
     retStatus.status = statusByte;
@@ -338,8 +328,8 @@ class RICAddOnIRFoot extends RICAddOnBase {
 
 class RICAddOnColourSensor extends RICAddOnBase {
   _dataExtractor: RICDataExtractor;
-  constructor(name: string, deviceTypeID: number, typeName: string, whoAmI: string) {
-    super(name, deviceTypeID, typeName, whoAmI);
+  constructor(name: string, typeName: string, whoAmI: string) {
+    super(name, typeName, whoAmI);
     this._dataExtractor = new RICDataExtractor(
       name,
       ADDON_COLOURSENSOR_FORMAT_DEF,
@@ -356,7 +346,6 @@ class RICAddOnColourSensor extends RICAddOnBase {
 
     // Extract data
     retStatus.id = addOnID;
-    retStatus.deviceTypeID = this._deviceTypeID;
     retStatus.name = this._name;
     retStatus.whoAmI = this._whoAmI;
     retStatus.status = statusByte;
@@ -406,8 +395,8 @@ class RICAddOnColourSensor extends RICAddOnBase {
 
 class RICAddOnDistanceSensor extends RICAddOnBase {
   _dataExtractor: RICDataExtractor;
-  constructor(name: string, deviceTypeID: number, typeName: string, whoAmI: string) {
-    super(name, deviceTypeID, typeName, whoAmI);
+  constructor(name: string, typeName: string, whoAmI: string) {
+    super(name, typeName, whoAmI);
     this._dataExtractor = new RICDataExtractor(
       name,
       ADDON_DISTANCESENSOR_FORMAT_DEF,
@@ -423,7 +412,6 @@ class RICAddOnDistanceSensor extends RICAddOnBase {
 
     // Extract data
     retStatus.id = addOnID;
-    retStatus.deviceTypeID = this._deviceTypeID;
     retStatus.name = this._name;
     retStatus.whoAmI = this._whoAmI;
     retStatus.status = statusByte;
@@ -436,8 +424,8 @@ class RICAddOnDistanceSensor extends RICAddOnBase {
 
 class RICAddOnLightSensor extends RICAddOnBase {
   _dataExtractor: RICDataExtractor;
-  constructor(name: string, deviceTypeID: number, typeName: string, whoAmI: string) {
-    super(name, deviceTypeID, typeName, whoAmI);
+  constructor(name: string, typeName: string, whoAmI: string) {
+    super(name, typeName, whoAmI);
     this._dataExtractor = new RICDataExtractor(
       name,
       ADDON_LIGHTSENSOR_FORMAT_DEF,
@@ -453,7 +441,6 @@ class RICAddOnLightSensor extends RICAddOnBase {
 
     // Extract data
     retStatus.id = addOnID;
-    retStatus.deviceTypeID = this._deviceTypeID;
     retStatus.name = this._name;
     retStatus.whoAmI = this._whoAmI;
     retStatus.status = statusByte;
@@ -466,8 +453,8 @@ class RICAddOnLightSensor extends RICAddOnBase {
 
 class RICAddOnNoiseSensor extends RICAddOnBase {
   _dataExtractor: RICDataExtractor;
-  constructor(name: string, deviceTypeID: number, typeName: string, whoAmI: string) {
-    super(name, deviceTypeID, typeName, whoAmI);
+  constructor(name: string, typeName: string, whoAmI: string) {
+    super(name, typeName, whoAmI);
     this._dataExtractor = new RICDataExtractor(
       name,
       ADDON_NOISESENSOR_FORMAT_DEF,
@@ -482,7 +469,6 @@ class RICAddOnNoiseSensor extends RICAddOnBase {
     const retStatus = new ROSSerialAddOnStatus();
     // Extract data
     retStatus.id = addOnID;
-    retStatus.deviceTypeID = this._deviceTypeID;
     retStatus.name = this._name;
     retStatus.whoAmI = this._whoAmI;
     retStatus.status = statusByte;
