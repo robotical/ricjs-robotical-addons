@@ -132,7 +132,7 @@ const ADDON_COLOURSENSOR_FORMAT_DEF = {
     {
       type: RICDataExtractorVarType.VAR_UNSIGNED,
       suffix: 'Val',
-      atBit: 50,
+      atBit: 56,
       bits: 16,
       postMult: 1.0,
       postAdd: 0,
