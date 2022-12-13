@@ -75,6 +75,14 @@ const ADDON_IRFOOT_FORMAT_DEF = {
       postMult: 1,
       postAdd: 0,
     },
+    {
+      type: RICDataExtractorVarType.VAR_UNSIGNED,
+      suffix: 'Val2',
+      atBit: 32,
+      bits: 16,
+      postMult: 1,
+      postAdd: 0,
+    },
   ],
 };
 
