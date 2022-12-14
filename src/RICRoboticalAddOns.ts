@@ -10,6 +10,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import { RICAddOnBase, RICAddOnRegistry, RICDataExtractor, RICDataExtractorVarType, RICLog, RICReportMsg, ROSSerialAddOnStatus } from "@robotical/ricjs";
+import { estimateColourSensorDetectionFlags, estimateIRFSensorDetectionFlags } from "./estimate-detection-flags";
 
 // RIC ADDON CODES
 export const RIC_WHOAMI_TYPE_CODE_ADDON_DISTANCE = "VCNL4200";
@@ -21,6 +22,20 @@ export const RIC_WHOAMI_TYPE_CODE_ADDON_LEDARM = "LEDarm";
 export const RIC_WHOAMI_TYPE_CODE_ADDON_LEDEYE = "LEDeye";
 export const RIC_WHOAMI_TYPE_CODE_ADDON_NOISE = "noisesensor";
 export const RIC_WHOAMI_TYPE_CODE_ADDON_GRIPSERVO = "roboservo3";
+
+// IRF and Colour sensor Val suffixes
+export const IRF_TOUCH_VAL = "Touch_IR";
+export const IRF_AIR_VAL = "Air_IR";
+export const IRF_TOUCH_AMBIENT = "Touch_Ambient";
+export const IRF_AIR_AMBIENT = "Air_Ambient";
+export const IRF_TOUCH_FLAG = "Touch";
+export const IRF_AIR_FLAG = "Air";
+
+export const CS_CLEAR = "Clear";
+export const CS_IRVAL = "IRVal";
+export const CS_TOUCH_FLAG = "Touch";
+export const CS_AIR_FLAG = "Air";
+
 
 export default class RICRoboticalAddOns {
   static registerAddOns(addOnRegistry: RICAddOnRegistry): void {
@@ -40,8 +55,8 @@ export default class RICRoboticalAddOns {
             value.typeName, 
             "RSAddOn", 
             key,
-            (name: string, addOnFamily: string, whoAmI: string) => {
-              return new value.class(name, addOnFamily, whoAmI) 
+            (name: string, addOnFamily: string, whoAmI: string, whoAmITypeCode: string) => {
+              return new value.class(name, addOnFamily, whoAmI, whoAmITypeCode) 
             } 
       );
     }
@@ -53,7 +68,7 @@ const ADDON_IRFOOT_FORMAT_DEF = {
   fields: [
     {
       type: RICDataExtractorVarType.VAR_BOOL,
-      suffix: 'Touch',
+      suffix: IRF_TOUCH_FLAG,
       atBit: 8,
       bits: 1,
       postMult: 1,
@@ -61,7 +76,7 @@ const ADDON_IRFOOT_FORMAT_DEF = {
     },
     {
       type: RICDataExtractorVarType.VAR_BOOL,
-      suffix: 'Air',
+      suffix: IRF_AIR_FLAG,
       atBit: 9,
       bits: 1,
       postMult: 1,
@@ -69,7 +84,7 @@ const ADDON_IRFOOT_FORMAT_DEF = {
     },
     {
       type: RICDataExtractorVarType.VAR_UNSIGNED,
-      suffix: 'Val',
+      suffix: IRF_TOUCH_VAL,
       atBit: 16,
       bits: 16,
       postMult: 1,
@@ -77,8 +92,24 @@ const ADDON_IRFOOT_FORMAT_DEF = {
     },
     {
       type: RICDataExtractorVarType.VAR_UNSIGNED,
-      suffix: 'Val2',
+      suffix: IRF_AIR_VAL,
       atBit: 32,
+      bits: 16,
+      postMult: 1,
+      postAdd: 0,
+    },
+    {
+      type: RICDataExtractorVarType.VAR_UNSIGNED,
+      suffix: IRF_TOUCH_AMBIENT,
+      atBit: 48,
+      bits: 16,
+      postMult: 1,
+      postAdd: 0,
+    },
+    {
+      type: RICDataExtractorVarType.VAR_UNSIGNED,
+      suffix: IRF_AIR_AMBIENT,
+      atBit: 64,
       bits: 16,
       postMult: 1,
       postAdd: 0,
@@ -90,7 +121,7 @@ const ADDON_COLOURSENSOR_FORMAT_DEF = {
   fields: [
     {
       type: RICDataExtractorVarType.VAR_UNSIGNED,
-      suffix: 'Clear',
+      suffix: CS_CLEAR,
       atBit: 8,
       bits: 8,
       postMult: 1,
@@ -123,7 +154,7 @@ const ADDON_COLOURSENSOR_FORMAT_DEF = {
     },
     {
       type: RICDataExtractorVarType.VAR_BOOL,
-      suffix: 'Touch',
+      suffix: CS_TOUCH_FLAG,
       atBit: 48,
       bits: 1,
       postMult: 1,
@@ -131,7 +162,7 @@ const ADDON_COLOURSENSOR_FORMAT_DEF = {
     },
     {
       type: RICDataExtractorVarType.VAR_BOOL,
-      suffix: 'Air',
+      suffix: CS_AIR_FLAG,
       atBit: 49,
       bits: 1,
       postMult: 1,
@@ -139,7 +170,7 @@ const ADDON_COLOURSENSOR_FORMAT_DEF = {
     },
     {
       type: RICDataExtractorVarType.VAR_UNSIGNED,
-      suffix: 'Val',
+      suffix: CS_IRVAL,
       atBit: 56,
       bits: 16,
       postMult: 1.0,
@@ -224,8 +255,8 @@ const ADDON_NOISESENSOR_FORMAT_DEF = {
 /*eslint no-empty-function: ["error", { "allow": ["methods"] }]*/
 /* eslint-disable @typescript-eslint/no-empty-function */
 class RICAddOnGripServo extends RICAddOnBase {
-  constructor(name: string, typeName: string, whoAmI: string) {
-    super(name, typeName, whoAmI);
+  constructor(name: string, typeName: string, whoAmI: string, whoAmITypeCode: string) {
+    super(name, typeName, whoAmI, whoAmITypeCode);
   }
 
   processPublishedData(
@@ -249,8 +280,8 @@ class RICAddOnGripServo extends RICAddOnBase {
 }
 
 class RICAddOnLEDFoot extends RICAddOnBase {
-  constructor(name: string, typeName: string, whoAmI: string) {
-    super(name, typeName, whoAmI);
+  constructor(name: string, typeName: string, whoAmI: string, whoAmITypeCode: string) {
+    super(name, typeName, whoAmI, whoAmITypeCode);
   }
   processPublishedData(
     addOnID: number,
@@ -273,8 +304,8 @@ class RICAddOnLEDFoot extends RICAddOnBase {
 }
 
 class RICAddOnLEDArm extends RICAddOnBase {
-  constructor(name: string, typeName: string, whoAmI: string) {
-    super(name, typeName, whoAmI);
+  constructor(name: string, typeName: string, whoAmI: string, whoAmITypeCode: string) {
+    super(name, typeName, whoAmI, whoAmITypeCode);
   }
   processPublishedData(
     addOnID: number,
@@ -295,8 +326,8 @@ class RICAddOnLEDArm extends RICAddOnBase {
 }
 
 class RICAddOnLEDEye extends RICAddOnBase {
-  constructor(name: string, typeName: string, whoAmI: string) {
-    super(name, typeName, whoAmI);
+  constructor(name: string, typeName: string, whoAmI: string, whoAmITypeCode: string) {
+    super(name, typeName, whoAmI, whoAmITypeCode);
   }
   processPublishedData(
     addOnID: number,
@@ -318,8 +349,8 @@ class RICAddOnLEDEye extends RICAddOnBase {
 
 class RICAddOnIRFoot extends RICAddOnBase {
   _dataExtractor: RICDataExtractor;
-  constructor(name: string, typeName: string, whoAmI: string) {
-    super(name, typeName, whoAmI);
+  constructor(name: string, typeName: string, whoAmI: string, whoAmITypeCode: string) {
+    super(name, typeName, whoAmI, whoAmITypeCode);
     this._dataExtractor = new RICDataExtractor(name, ADDON_IRFOOT_FORMAT_DEF);
   }
   processPublishedData(
@@ -336,6 +367,10 @@ class RICAddOnIRFoot extends RICAddOnBase {
     retStatus.whoAmI = this._whoAmI;
     retStatus.status = statusByte;
     retStatus.vals = this._dataExtractor.extractData(rawData);
+
+    // adding predicted values for Touch and Ground
+    estimateIRFSensorDetectionFlags(retStatus, this._whoAmITypeCode);
+
     return retStatus;
   }
   processInit(_dataReceived: RICReportMsg): void {
@@ -344,8 +379,8 @@ class RICAddOnIRFoot extends RICAddOnBase {
 
 class RICAddOnColourSensor extends RICAddOnBase {
   _dataExtractor: RICDataExtractor;
-  constructor(name: string, typeName: string, whoAmI: string) {
-    super(name, typeName, whoAmI);
+  constructor(name: string, typeName: string, whoAmI: string, whoAmITypeCode: string) {
+    super(name, typeName, whoAmI, whoAmITypeCode);
     this._dataExtractor = new RICDataExtractor(
       name,
       ADDON_COLOURSENSOR_FORMAT_DEF,
@@ -366,6 +401,10 @@ class RICAddOnColourSensor extends RICAddOnBase {
     retStatus.whoAmI = this._whoAmI;
     retStatus.status = statusByte;
     retStatus.vals = this._dataExtractor.extractData(rawData);
+
+    // adding predicted values for Touch and Ground
+    estimateColourSensorDetectionFlags(retStatus, this._whoAmITypeCode);
+
     return retStatus;
   }
 
@@ -411,8 +450,8 @@ class RICAddOnColourSensor extends RICAddOnBase {
 
 class RICAddOnDistanceSensor extends RICAddOnBase {
   _dataExtractor: RICDataExtractor;
-  constructor(name: string, typeName: string, whoAmI: string) {
-    super(name, typeName, whoAmI);
+  constructor(name: string, typeName: string, whoAmI: string, whoAmITypeCode: string) {
+    super(name, typeName, whoAmI, whoAmITypeCode);
     this._dataExtractor = new RICDataExtractor(
       name,
       ADDON_DISTANCESENSOR_FORMAT_DEF,
@@ -440,8 +479,8 @@ class RICAddOnDistanceSensor extends RICAddOnBase {
 
 class RICAddOnLightSensor extends RICAddOnBase {
   _dataExtractor: RICDataExtractor;
-  constructor(name: string, typeName: string, whoAmI: string) {
-    super(name, typeName, whoAmI);
+  constructor(name: string, typeName: string, whoAmI: string, whoAmITypeCode: string) {
+    super(name, typeName, whoAmI, whoAmITypeCode);
     this._dataExtractor = new RICDataExtractor(
       name,
       ADDON_LIGHTSENSOR_FORMAT_DEF,
@@ -469,8 +508,8 @@ class RICAddOnLightSensor extends RICAddOnBase {
 
 class RICAddOnNoiseSensor extends RICAddOnBase {
   _dataExtractor: RICDataExtractor;
-  constructor(name: string, typeName: string, whoAmI: string) {
-    super(name, typeName, whoAmI);
+  constructor(name: string, typeName: string, whoAmI: string, whoAmITypeCode: string) {
+    super(name, typeName, whoAmI, whoAmITypeCode);
     this._dataExtractor = new RICDataExtractor(
       name,
       ADDON_NOISESENSOR_FORMAT_DEF,

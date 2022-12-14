@@ -44,6 +44,6 @@
         "typescript": "^4.5.5"
     },
     "dependencies": {
-        "@robotical/ricjs": "^1.5.1"
+        "@robotical/ricjs": "^1.10.1"
     }
 }
