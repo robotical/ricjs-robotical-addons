@@ -10,7 +10,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import { RICAddOnBase, RICAddOnRegistry, RICDataExtractor, RICDataExtractorVarType, RICLog, RICReportMsg, ROSSerialAddOnStatus } from "@robotical/ricjs";
-import { estimateColourSensorDetectionFlags, estimateIRFSensorDetectionFlags } from "./estimate-detection-flags";
+import { estimateDetectionFlags} from "./estimate-detection-flags";
 
 // RIC ADDON CODES
 export const RIC_WHOAMI_TYPE_CODE_ADDON_DISTANCE = "VCNL4200";
@@ -369,7 +369,7 @@ class RICAddOnIRFoot extends RICAddOnBase {
     retStatus.vals = this._dataExtractor.extractData(rawData);
 
     // adding predicted values for Touch and Ground
-    estimateIRFSensorDetectionFlags(retStatus, this._whoAmITypeCode);
+    estimateDetectionFlags(retStatus, this._whoAmITypeCode);
 
     return retStatus;
   }
@@ -403,7 +403,7 @@ class RICAddOnColourSensor extends RICAddOnBase {
     retStatus.vals = this._dataExtractor.extractData(rawData);
 
     // adding predicted values for Touch and Ground
-    estimateColourSensorDetectionFlags(retStatus, this._whoAmITypeCode);
+    estimateDetectionFlags(retStatus, this._whoAmITypeCode);
 
     return retStatus;
   }
