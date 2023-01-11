@@ -51,6 +51,18 @@ export default class RICRoboticalAddOns {
       [RIC_WHOAMI_TYPE_CODE_ADDON_GRIPSERVO]: { "class": RICAddOnGripServo,      "typeName": "Gripper" },
     };
     for (const [key, value] of Object.entries(addOns)) {
+      if (key === RIC_WHOAMI_TYPE_CODE_ADDON_LEDEYE) {
+        // the LEDEye addon we register it for both BusPixel and RSAddOn
+        // as batch 4 LEDEyes will come up as BusPixel
+          addOnRegistry.registerHWElemType( 
+            value.typeName, 
+            "BusPixel", 
+            key,
+            (name: string, addOnFamily: string, whoAmI: string, whoAmITypeCode: string) => {
+              return new value.class(name, addOnFamily, whoAmI, whoAmITypeCode) 
+            } 
+        );  
+      }
         addOnRegistry.registerHWElemType( 
             value.typeName, 
             "RSAddOn", 
