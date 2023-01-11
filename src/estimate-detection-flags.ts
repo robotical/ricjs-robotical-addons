@@ -3,11 +3,9 @@ import {
   CS_AIR_FLAG,
   CS_CLEAR,
   CS_IRVAL,
-  //   CS_CLEAR,
-  //   CS_IRVAL,
   CS_TOUCH_FLAG,
-  IRF_AIR_AMBIENT,
-  IRF_AIR_FLAG,
+  // IRF_AIR_AMBIENT,
+  // IRF_AIR_FLAG,
   IRF_AIR_VAL,
   IRF_TOUCH_AMBIENT,
   IRF_TOUCH_FLAG,
@@ -37,7 +35,7 @@ const PARAMETERS: {
 } = {
   [BATCH1_IRF_TYPE_CODE]: {
     air: {
-      model: function (retStatus: ROSSerialAddOnStatus) {
+      model: function () {
         // const predictorNames = [IRF_TOUCH_VAL, IRF_AIR_VAL]; // [x1, x2]
         // const flagName = IRF_AIR_FLAG;
         // const x1 = retStatus.vals[retStatus.name + predictorNames[0]] as number;
@@ -85,7 +83,7 @@ const PARAMETERS: {
   },
   [BATCH2_IRF_TYPE_CODE]: {
     air: {
-      model: function (retStatus: ROSSerialAddOnStatus) {
+      model: function () {
         // const predictorNames = [IRF_AIR_VAL, IRF_AIR_AMBIENT]; // [x1, x2]
         // const flagName = IRF_AIR_FLAG;
         // const x1 = retStatus.vals[retStatus.name + predictorNames[0]] as number;
@@ -133,7 +131,7 @@ const PARAMETERS: {
   },
   [BATCH3_IRF_TYPE_CODE]: {
     air: {
-      model: function (retStatus: ROSSerialAddOnStatus) {
+      model: function () {
         // const predictorNames = [IRF_AIR_VAL, IRF_AIR_AMBIENT]; // [x1, x2]
         // const flagName = IRF_AIR_FLAG;
         // const x1 = retStatus.vals[retStatus.name + predictorNames[0]] as number;
