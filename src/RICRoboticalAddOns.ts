@@ -40,40 +40,33 @@ export const CS_AIR_FLAG = "Air";
 export default class RICRoboticalAddOns {
   static registerAddOns(addOnRegistry: RICAddOnRegistry): void {
     const addOns = {
-      [RIC_WHOAMI_TYPE_CODE_ADDON_DISTANCE]: { "class": RICAddOnDistanceSensor, "typeName": "DistanceSensor"},
-      [RIC_WHOAMI_TYPE_CODE_ADDON_LIGHT]: { "class": RICAddOnLightSensor,    "typeName": "LightSensor" },
-      [RIC_WHOAMI_TYPE_CODE_ADDON_COLOUR]: { "class": RICAddOnColourSensor,   "typeName": "ColourSensor" },
-      [RIC_WHOAMI_TYPE_CODE_ADDON_IRFOOT]: { "class": RICAddOnIRFoot,         "typeName": "IRFoot" },
-      [RIC_WHOAMI_TYPE_CODE_ADDON_LEDFOOT]: { "class": RICAddOnLEDFoot,        "typeName": "DiscoFoot" },
-      [RIC_WHOAMI_TYPE_CODE_ADDON_LEDARM]: { "class": RICAddOnLEDArm,         "typeName": "DiscoArm" },
-      [RIC_WHOAMI_TYPE_CODE_ADDON_LEDEYE]: { "class": RICAddOnLEDEye,         "typeName": "DiscoEyes" },
-      [RIC_WHOAMI_TYPE_CODE_ADDON_NOISE]: { "class": RICAddOnNoiseSensor,    "typeName": "NoiseSensor" },
-      [RIC_WHOAMI_TYPE_CODE_ADDON_GRIPSERVO]: { "class": RICAddOnGripServo,      "typeName": "Gripper" },
+      [RIC_WHOAMI_TYPE_CODE_ADDON_DISTANCE]: [{ "class": RICAddOnDistanceSensor, "typeName": "DistanceSensor", "addonFamily": "RSAddOn"}],
+      [RIC_WHOAMI_TYPE_CODE_ADDON_LIGHT]: [{ "class": RICAddOnLightSensor,    "typeName": "LightSensor",       "addonFamily": "RSAddOn"}],
+      [RIC_WHOAMI_TYPE_CODE_ADDON_COLOUR]: [{ "class": RICAddOnColourSensor,   "typeName": "ColourSensor",     "addonFamily": "RSAddOn"}],
+      [RIC_WHOAMI_TYPE_CODE_ADDON_IRFOOT]: [{ "class": RICAddOnIRFoot,         "typeName": "IRFoot",           "addonFamily": "RSAddOn"}],
+      [RIC_WHOAMI_TYPE_CODE_ADDON_LEDFOOT]: [{ "class": RICAddOnLEDFoot,        "typeName": "DiscoFoot",       "addonFamily": "RSAddOn"}],
+      [RIC_WHOAMI_TYPE_CODE_ADDON_LEDARM]: [{ "class": RICAddOnLEDArm,         "typeName": "DiscoArm",         "addonFamily": "RSAddOn"}],
+      // the LEDEye addon we register it for both BusPixel and RSAddOn
+      // as batch 4 LEDEyes will come up as BusPixel
+      [RIC_WHOAMI_TYPE_CODE_ADDON_LEDEYE]: [{ "class": RICAddOnLEDEye,         "typeName": "DiscoEyes",        "addonFamily": "RSAddOn"},
+                                            { "class": RICAddOnLEDEyeBusPix,   "typeName": "DiscoEyes",        "addonFamily": "BusPixels"}],
+      [RIC_WHOAMI_TYPE_CODE_ADDON_NOISE]: [{ "class": RICAddOnNoiseSensor,    "typeName": "NoiseSensor",       "addonFamily": "RSAddOn"}],
+      [RIC_WHOAMI_TYPE_CODE_ADDON_GRIPSERVO]: [{ "class": RICAddOnGripServo,      "typeName": "Gripper",       "addonFamily": "RSAddOn"}],
     };
-    for (const [key, value] of Object.entries(addOns)) {
-      if (key === RIC_WHOAMI_TYPE_CODE_ADDON_LEDEYE) {
-        // the LEDEye addon we register it for both BusPixel and RSAddOn
-        // as batch 4 LEDEyes will come up as BusPixel
+    for (const [key, arrayValue] of Object.entries(addOns)) {
+        for (const value of arrayValue) {       
           addOnRegistry.registerHWElemType( 
             value.typeName, 
-            "BusPixel", 
+            value.addonFamily, 
             key,
             (name: string, addOnFamily: string, whoAmI: string, whoAmITypeCode: string) => {
               return new value.class(name, addOnFamily, whoAmI, whoAmITypeCode) 
             } 
-        );  
+          );  
+        }
       }
-        addOnRegistry.registerHWElemType( 
-            value.typeName, 
-            "RSAddOn", 
-            key,
-            (name: string, addOnFamily: string, whoAmI: string, whoAmITypeCode: string) => {
-              return new value.class(name, addOnFamily, whoAmI, whoAmITypeCode) 
-            } 
-      );
     }
   }
-}
 
 // Format definitions
 const ADDON_IRFOOT_FORMAT_DEF = {
@@ -325,7 +318,6 @@ class RICAddOnLEDArm extends RICAddOnBase {
   ): ROSSerialAddOnStatus {
     // Status to return
     const retStatus = new ROSSerialAddOnStatus();
-
     // Extract data
     retStatus.id = addOnID;
     retStatus.name = this._name;
@@ -353,6 +345,30 @@ class RICAddOnLEDEye extends RICAddOnBase {
     retStatus.name = this._name;
     retStatus.whoAmI = this._whoAmI;
     retStatus.status = statusByte;
+    return retStatus;
+  }
+  processInit(_dataReceived: RICReportMsg): void {
+  }
+}
+
+class RICAddOnLEDEyeBusPix extends RICAddOnBase {
+  constructor(name: string, typeName: string, whoAmI: string, whoAmITypeCode: string) {
+    super(name, typeName, whoAmI, whoAmITypeCode);
+    // static add-on is do not publish their data to ROS (e.g, LED eye buspix)
+    // we use this flag to grab these addons from withing the ricjs library
+    super._isStatic = true;
+  }
+  processPublishedData(
+    addOnID: number,
+  ): ROSSerialAddOnStatus {
+    // Status to return
+    const retStatus = new ROSSerialAddOnStatus();
+
+    // Extract data
+    retStatus.id = addOnID;
+    retStatus.name = this._name;
+    retStatus.whoAmI = this._whoAmI;
+    retStatus.status = 128; 
     return retStatus;
   }
   processInit(_dataReceived: RICReportMsg): void {
