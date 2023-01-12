@@ -20,7 +20,6 @@ export const RIC_WHOAMI_TYPE_CODE_ADDON_IRFOOT = "IRFoot";
 export const RIC_WHOAMI_TYPE_CODE_ADDON_LEDFOOT = "LEDfoot";
 export const RIC_WHOAMI_TYPE_CODE_ADDON_LEDARM = "LEDarm";
 export const RIC_WHOAMI_TYPE_CODE_ADDON_LEDEYE = "LEDeye";
-export const RIC_WHOAMI_TYPE_CODE_ADDON_BUSPIXEL = "BusPix19";
 export const RIC_WHOAMI_TYPE_CODE_ADDON_NOISE = "noisesensor";
 export const RIC_WHOAMI_TYPE_CODE_ADDON_GRIPSERVO = "roboservo3";
 
@@ -51,7 +50,6 @@ export default class RICRoboticalAddOns {
       // as batch 4 LEDEyes will come up as BusPixel
       [RIC_WHOAMI_TYPE_CODE_ADDON_LEDEYE]: [{ "class": RICAddOnLEDEye,         "typeName": "DiscoEyes",        "addonFamily": "RSAddOn"},
                                             { "class": RICAddOnLEDEyeBusPix,   "typeName": "DiscoEyes",        "addonFamily": "BusPixels"}],
-      [RIC_WHOAMI_TYPE_CODE_ADDON_BUSPIXEL]: [{ "class": RICAddOnLEDEyeBusPix,   "typeName": "DiscoEyes",        "addonFamily": "BusPixels"}],
       [RIC_WHOAMI_TYPE_CODE_ADDON_NOISE]: [{ "class": RICAddOnNoiseSensor,    "typeName": "NoiseSensor",       "addonFamily": "RSAddOn"}],
       [RIC_WHOAMI_TYPE_CODE_ADDON_GRIPSERVO]: [{ "class": RICAddOnGripServo,      "typeName": "Gripper",       "addonFamily": "RSAddOn"}],
     };
