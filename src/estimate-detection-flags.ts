@@ -4,21 +4,21 @@ import {
   CS_CLEAR,
   CS_IRVAL,
   CS_TOUCH_FLAG,
-  // IRF_AIR_AMBIENT,
-  // IRF_AIR_FLAG,
+  IRF_AIR_AMBIENT,
+  IRF_AIR_FLAG,
   IRF_AIR_VAL,
   IRF_TOUCH_AMBIENT,
   IRF_TOUCH_FLAG,
   IRF_TOUCH_VAL,
 } from "./RICRoboticalAddOns";
 
-const BATCH1_IRF_TYPE_CODE = "86";
-const BATCH2_IRF_TYPE_CODE = "8c";
-const BATCH3_IRF_TYPE_CODE = "8c";
+const BATCH1_IRF_TYPE_CODE = "not-working-86";
+const BATCH2_IRF_TYPE_CODE = "not-working-8c";
+const BATCH3_IRF_TYPE_CODE = "not-working-8c";
 
-const BATCH1_CS_TYPE_CODE = "85";
-const BATCH2_CS_TYPE_CODE = "85";
-const BATCH3_CS_TYPE_CODE = "91";
+const BATCH1_CS_TYPE_CODE = "not-working-85";
+const BATCH2_CS_TYPE_CODE = "not-working-85";
+const BATCH3_CS_TYPE_CODE = "not-working-91";
 type ModelType = (retStatus: ROSSerialAddOnStatus) => void;
 // PARAMETERS
 const PARAMETERS: {
@@ -35,25 +35,25 @@ const PARAMETERS: {
 } = {
   [BATCH1_IRF_TYPE_CODE]: {
     air: {
-      model: function () {
-        // const predictorNames = [IRF_TOUCH_VAL, IRF_AIR_VAL]; // [x1, x2]
-        // const flagName = IRF_AIR_FLAG;
-        // const x1 = retStatus.vals[retStatus.name + predictorNames[0]] as number;
-        // const x2 = retStatus.vals[retStatus.name + predictorNames[1]] as number;
-        // const pOfTrue =
-        //   1 /
-        //   (1 +
-        //     Math.exp(
-        //       -(
-        //         this.parameters[0] +
-        //         this.parameters[1] * x1 +
-        //         this.parameters[2] * x2 +
-        //         this.parameters[3] * x1 ** 2 +
-        //         this.parameters[4] * x2 ** 2
-        //       )
-        //     ));
-        // const prediction = 0.5 < pOfTrue ? true : false;
-        // retStatus.vals[retStatus.name + flagName ] = prediction;
+      model: function (retStatus: ROSSerialAddOnStatus) {
+        const predictorNames = [IRF_TOUCH_VAL, IRF_AIR_VAL]; // [x1, x2]
+        const flagName = IRF_AIR_FLAG;
+        const x1 = retStatus.vals[retStatus.name + predictorNames[0]] as number;
+        const x2 = retStatus.vals[retStatus.name + predictorNames[1]] as number;
+        const pOfTrue =
+          1 /
+          (1 +
+            Math.exp(
+              -(
+                this.parameters[0] +
+                this.parameters[1] * x1 +
+                this.parameters[2] * x2 +
+                this.parameters[3] * x1 ** 2 +
+                this.parameters[4] * x2 ** 2
+              )
+            ));
+        const prediction = 0.5 < pOfTrue ? true : false;
+        retStatus.vals[retStatus.name + flagName ] = prediction;
       },
       parameters: [-80.7393, 11.5344, 2.7277, 0.246, -0.022],
     },
@@ -83,25 +83,25 @@ const PARAMETERS: {
   },
   [BATCH2_IRF_TYPE_CODE]: {
     air: {
-      model: function () {
-        // const predictorNames = [IRF_AIR_VAL, IRF_AIR_AMBIENT]; // [x1, x2]
-        // const flagName = IRF_AIR_FLAG;
-        // const x1 = retStatus.vals[retStatus.name + predictorNames[0]] as number;
-        // const x2 = retStatus.vals[retStatus.name + predictorNames[1]] as number;
-        // const pOfTrue =
-        //   1 /
-        //   (1 +
-        //     Math.exp(
-        //       -(
-        //         this.parameters[0] +
-        //         this.parameters[1] * x1 +
-        //         this.parameters[2] * x2 +
-        //         this.parameters[3] * x1 ** 2 +
-        //         this.parameters[4] * x2 ** 2
-        //       )
-        //     ));
-        // const prediction = 0.5 < pOfTrue ? true : false;
-        // retStatus.vals[retStatus.name + flagName ] = prediction;
+      model: function (retStatus: ROSSerialAddOnStatus) {
+        const predictorNames = [IRF_AIR_VAL, IRF_AIR_AMBIENT]; // [x1, x2]
+        const flagName = IRF_AIR_FLAG;
+        const x1 = retStatus.vals[retStatus.name + predictorNames[0]] as number;
+        const x2 = retStatus.vals[retStatus.name + predictorNames[1]] as number;
+        const pOfTrue =
+          1 /
+          (1 +
+            Math.exp(
+              -(
+                this.parameters[0] +
+                this.parameters[1] * x1 +
+                this.parameters[2] * x2 +
+                this.parameters[3] * x1 ** 2 +
+                this.parameters[4] * x2 ** 2
+              )
+            ));
+        const prediction = 0.5 < pOfTrue ? true : false;
+        retStatus.vals[retStatus.name + flagName ] = prediction;
       },
       parameters: [510.4559, -15.0318, 18.4332, 0.04868, -0.1463],
     },
@@ -131,25 +131,25 @@ const PARAMETERS: {
   },
   [BATCH3_IRF_TYPE_CODE]: {
     air: {
-      model: function () {
-        // const predictorNames = [IRF_AIR_VAL, IRF_AIR_AMBIENT]; // [x1, x2]
-        // const flagName = IRF_AIR_FLAG;
-        // const x1 = retStatus.vals[retStatus.name + predictorNames[0]] as number;
-        // const x2 = retStatus.vals[retStatus.name + predictorNames[1]] as number;
-        // const pOfTrue =
-        //   1 /
-        //   (1 +
-        //     Math.exp(
-        //       -(
-        //         this.parameters[0] +
-        //         this.parameters[1] * x1 +
-        //         this.parameters[2] * x2 +
-        //         this.parameters[3] * x1 ** 2 +
-        //         this.parameters[4] * x2 ** 2
-        //       )
-        //     ));
-        // const prediction = 0.5 < pOfTrue ? true : false;
-        // retStatus.vals[retStatus.name + flagName ] = prediction;
+      model: function (retStatus: ROSSerialAddOnStatus) {
+        const predictorNames = [IRF_AIR_VAL, IRF_AIR_AMBIENT]; // [x1, x2]
+        const flagName = IRF_AIR_FLAG;
+        const x1 = retStatus.vals[retStatus.name + predictorNames[0]] as number;
+        const x2 = retStatus.vals[retStatus.name + predictorNames[1]] as number;
+        const pOfTrue =
+          1 /
+          (1 +
+            Math.exp(
+              -(
+                this.parameters[0] +
+                this.parameters[1] * x1 +
+                this.parameters[2] * x2 +
+                this.parameters[3] * x1 ** 2 +
+                this.parameters[4] * x2 ** 2
+              )
+            ));
+        const prediction = 0.5 < pOfTrue ? true : false;
+        retStatus.vals[retStatus.name + flagName ] = prediction;
       },
       parameters: [510.4559, -15.0318, 18.4332, 0.04868, -0.1463],
     },
