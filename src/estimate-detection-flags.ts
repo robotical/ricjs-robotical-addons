@@ -334,6 +334,6 @@ export const estimateDetectionFlags = (
     PARAMETERS[whoAmITypeCode].air.model(retStatus);
     PARAMETERS[whoAmITypeCode].touch.model(retStatus);
   } catch (e) {
-    console.log("non existed whoAmI: " + whoAmITypeCode);
+    // console.log("non existed whoAmI: " + whoAmITypeCode);
   }
 };
