@@ -40,7 +40,7 @@ export default class ColourSensorManualCalibrator {
                 .sendRICRESTURL<RICHWElemList>(`hwstatus/status/${name}`);
             if (hwElemList?.rslt === "ok" && hwElemList.hw?.length > 0) {
                 const hwElem = hwElemList.hw[0];
-                if (!!!hwElem.commsOk) {
+                if (!hwElem.commsOk) {
                     await this._RICConnector.getRICMsgHandler().sendRICRESTURL("pwrctrl/5von");
                     await new Promise((resolve) => setTimeout(resolve, 4000));
                     return;
