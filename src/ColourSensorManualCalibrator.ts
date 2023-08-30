@@ -9,7 +9,7 @@ const CALIBRATE_COMMAND = (hwElemName: string, baseAddr: number, highByte: strin
 
 export default class ColourSensorManualCalibrator {
     private static _RICConnector: RICConnector;
-    private static _isCalibrating: boolean = false;
+    private static _isCalibrating = false;
 
 
     static async calibrate(_RICConnector: RICConnector): Promise<boolean> {
