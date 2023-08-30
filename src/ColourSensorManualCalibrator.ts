@@ -20,6 +20,7 @@ export default class ColourSensorManualCalibrator {
         this._isCalibrating = true;
         try {
             const names = await this.getColourSensorNames();
+            await this.turnOnServosIfRequired(names);
             const didGetCalibrate = await this.getCalibration(names);
             const didGetCSReading = await this.getColourSensorReading(names);
             const didGetCalibrate2 = await this.getCalibration(names);
@@ -31,6 +32,24 @@ export default class ColourSensorManualCalibrator {
             this._isCalibrating = false;
         }
     }
+
+    private static async turnOnServosIfRequired(names: string[]) {
+        if (names.length === 0) return;
+        for (const name of names) {
+            const hwElemList = await this._RICConnector.getRICMsgHandler()
+                .sendRICRESTURL<RICHWElemList>(`hwstatus/status/${name}`);
+            if (hwElemList?.rslt === "ok" && hwElemList.hw?.length > 0) {
+                const hwElem = hwElemList.hw[0];
+                if (!!!hwElem.commsOk) {
+                    await this._RICConnector.getRICMsgHandler().sendRICRESTURL("pwrctrl/5von");
+                    await new Promise((resolve) => setTimeout(resolve, 4000));
+                    return;
+                }
+            }
+            await new Promise((resolve) => setTimeout(resolve, 200));
+        }
+    }
+
 
     private static async getColourSensorNames(): Promise<string[]> {
         RICLog.info("\n==== getColourSensorNames ====");
